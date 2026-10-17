@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 카운트 캣 홍보 사이트 — 페이지를 바꾸면 lastmod를 고친다. /count-cat/ 아래는 momsmom14/count-cat 저장소의 법적 고지 페이지다 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://momsmom14.github.io/</loc><lastmod>2026-10-17</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://momsmom14.github.io/count-cat/odds.html</loc><lastmod>2026-10-16</lastmod><changefreq>monthly</changefreq><priority>0.4</priority></url>
-  <url><loc>https://momsmom14.github.io/count-cat/privacy.html</loc><lastmod>2026-10-16</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
-  <url><loc>https://momsmom14.github.io/count-cat/delete-account.html</loc><lastmod>2026-10-16</lastmod><changefreq>yearly</changefreq><priority>0.2</priority></url>
+  <url><loc>https://momsmom14.github.io/</loc><lastmod>2026-10-17</lastmod></url>
+  <url><loc>https://momsmom14.github.io/count-cat/odds.html</loc><lastmod>2026-10-16</lastmod></url>
+  <url><loc>https://momsmom14.github.io/count-cat/privacy.html</loc><lastmod>2026-10-16</lastmod></url>
+  <url><loc>https://momsmom14.github.io/count-cat/delete-account.html</loc><lastmod>2026-10-16</lastmod></url>
 </urlset>
