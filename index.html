@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>카운트 캣 — 십이지 대전</title>
+<meta name="description" content="숫자를 낮은 곳에서 높은 곳으로 이어 터뜨리는 숫자 퍼즐 RPG. 고양이 편이 되어 십이지 왕국에 맞서자!">
+<meta name="theme-color" content="#fff3dc">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Count Cat">
+<meta property="og:title" content="카운트 캣 — 십이지 대전">
+<meta property="og:description" content="숫자를 이어 올려 터뜨리는 퍼즐 RPG. 고양이 편이 되어 십이지 왕국에 맞서자!">
+<meta property="og:image" content="https://momsmom14.github.io/img/og.png">
+<meta property="og:url" content="https://momsmom14.github.io/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="img/icon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="img/icon.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Jua&family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  /* 게임과 같은 조형 — 크림 종이 · 코코아 선 · 큰 라운드 (D-158). 검정은 쓰지 않는다 */
+  :root {
+    --paper: #fffaf0;
+    --cream: #fff3dc;
+    --cream-2: #ffe9c4;
+    --cocoa: #5b3a29;
+    --cocoa-soft: #8a6450;
+    --gold: #ffc23d;
+    --gold-deep: #e8962a;
+    --line: 2.5px;
+    --r-lg: 28px;
+    --r-md: 18px;
+    --fire: #ef5a3c; --water: #3d8ff0; --wood: #4fbd5a; --light: #f5b42a; --dark: #9b64e3; --heal: #f06ca5;
+    --f-head: 'Jua', 'M PLUS Rounded 1c', sans-serif;
+    --f-latin: 'Baloo 2', 'Jua', sans-serif;
+    --f-body: 'M PLUS Rounded 1c', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--cream);
+    background-image: radial-gradient(circle, rgba(232,150,42,.13) 3px, transparent 3.5px);
+    background-size: 34px 34px;
+    color: var(--cocoa);
+    font: 500 16px/1.7 var(--f-body);
+    word-break: keep-all; overflow-wrap: anywhere;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: inherit; }
+  .wrap { width: min(1120px, 100% - 32px); margin-inline: auto; }
+
+  /* ── 머리 ── */
+  .top {
+    position: sticky; top: 0; z-index: 10;
+    background: rgba(255,243,220,.88); backdrop-filter: blur(8px);
+    border-bottom: var(--line) solid var(--cocoa);
+  }
+  .top .wrap { display: flex; align-items: center; gap: 12px; height: 62px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 400 22px var(--f-head); }
+  .brand img { width: 38px; height: 38px; border-radius: 11px; border: var(--line) solid var(--cocoa); }
+  .nav { margin-left: auto; display: flex; gap: 6px; }
+  .nav a { text-decoration: none; font: 700 15px var(--f-body); padding: 6px 12px; border-radius: 999px; }
+  .nav a:hover { background: var(--cream-2); }
+  @media (max-width: 720px) { .nav { display: none; } .top .btn-play { margin-left: auto; } }
+
+  /* ── 버튼 ── */
+  .btn-play {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 22px 12px 18px; border-radius: 999px;
+    background: linear-gradient(#ffd668, var(--gold));
+    border: var(--line) solid var(--cocoa);
+    box-shadow: 0 5px 0 var(--cocoa);
+    font: 400 19px var(--f-head); text-decoration: none; color: var(--cocoa);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .btn-play:hover { transform: translateY(-2px); box-shadow: 0 7px 0 var(--cocoa); }
+  .btn-play:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--cocoa); }
+  .btn-play svg { width: 22px; height: 22px; flex: none; }
+  .btn-play small { display: block; font: 700 11px var(--f-body); opacity: .75; margin-bottom: -4px; }
+  .btn-play.soon { cursor: default; background: linear-gradient(#fff3d0, #ffe3a0); }
+  .btn-play.soon:hover, .btn-play.soon:active { transform: none; box-shadow: 0 5px 0 var(--cocoa); }
+  .top .btn-play.soon small { display: block; }
+  .top .btn-play { padding: 7px 16px 7px 12px; font-size: 16px; box-shadow: 0 3px 0 var(--cocoa); }
+  .top .btn-play small { display: none; }
+
+  /* ── 첫 화면 ── */
+  .hero { padding: 56px 0 72px; }
+  .hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+  .logo {
+    margin: 0; font: 800 clamp(64px, 11vw, 124px)/.86 var(--f-latin); letter-spacing: .01em;
+    color: var(--gold);
+    -webkit-text-stroke: 5px var(--cocoa); paint-order: stroke fill;
+    text-shadow: 0 7px 0 var(--cocoa);
+  }
+  .pill {
+    display: inline-block; margin: 26px 0 14px; padding: 6px 22px;
+    background: var(--paper); border: var(--line) solid var(--cocoa); border-radius: 999px;
+    box-shadow: 0 4px 0 var(--cocoa);
+    font: 400 24px var(--f-head);
+  }
+  .lead { font: 400 clamp(20px, 2.6vw, 26px)/1.45 var(--f-head); margin: 0 0 26px; }
+  .cta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 18px; }
+  .cta-note { font-size: 13px; color: var(--cocoa-soft); }
+
+  .stage { position: relative; aspect-ratio: 896 / 1015; max-width: 460px; justify-self: center; width: 100%; }
+  .stage .card {
+    position: absolute; inset: 0; border-radius: 36px; overflow: hidden;
+    border: 4px solid var(--cocoa); box-shadow: 0 10px 0 var(--cocoa);
+    transform: rotate(2.5deg); background: var(--cream-2);
+  }
+  .stage .card img { width: 100%; height: 100%; object-fit: cover; animation: breathe 4.6s ease-in-out infinite; transform-origin: 50% 100%; }
+  @keyframes breathe { 50% { transform: scale(1.012, .992); } }
+  .stage .tile { position: absolute; width: clamp(54px, 7vw, 74px); animation: bob 3.2s ease-in-out infinite; }
+  .stage .tile:nth-child(2) { left: -9%; top: 70%; animation-delay: 0s; }
+  .stage .tile:nth-child(3) { left: -14%; top: 48%; animation-delay: -.6s; }
+  .stage .tile:nth-child(4) { left: -6%;  top: 26%; animation-delay: -1.2s; }
+  .stage .tile:nth-child(5) { left: 8%;   top: 5%;  animation-delay: -1.8s; }
+  .stage .tile:nth-child(6) { left: 30%;  top: -7%; animation-delay: -2.4s; }
+  @keyframes bob { 50% { transform: translateY(-9px) rotate(-3deg); } }
+  @media (max-width: 860px) {
+    .hero { padding-top: 32px; }
+    .hero .wrap { grid-template-columns: 1fr; text-align: center; }
+    .cta-row { justify-content: center; }
+    .stage { max-width: 340px; margin-top: 12px; }
+    .stage .tile:nth-child(2) { left: -4%; } .stage .tile:nth-child(3) { left: -5%; } .stage .tile:nth-child(4) { left: -3%; }
+  }
+
+  /* ── 타일 — 사탕 + 숫자 부조 ── */
+  .tile {
+    aspect-ratio: 1; display: grid; place-items: center;
+    border-radius: 24%; border: var(--line) solid var(--cocoa);
+    background: var(--c, var(--fire));
+    box-shadow: inset 0 -5px 0 rgba(91,58,41,.28), inset 0 4px 0 rgba(255,255,255,.35), 0 3px 0 var(--cocoa);
+    font: 800 clamp(26px, 3.4vw, 40px)/1 var(--f-latin);
+    color: #fff; -webkit-text-stroke: 3px var(--cocoa); paint-order: stroke fill;
+    user-select: none; -webkit-user-select: none;
+  }
+  .tile span { transform: translateY(.06em); }
+  .t-fire { --c: var(--fire); } .t-water { --c: var(--water); } .t-wood { --c: var(--wood); }
+  .t-light { --c: var(--light); } .t-dark { --c: var(--dark); } .t-heal { --c: var(--heal); }
+
+  /* ── 공통 구획 ── */
+  section { padding: 64px 0; }
+  .sec-head { text-align: center; margin-bottom: 34px; }
+  .sec-head .kicker { display: inline-block; font: 800 14px var(--f-latin); letter-spacing: .14em; color: var(--gold-deep); }
+  .sec-head h2 { margin: 2px 0 8px; font: 400 clamp(30px, 4.4vw, 44px)/1.2 var(--f-head); }
+  .sec-head p { margin: 0 auto; max-width: 560px; color: var(--cocoa-soft); }
+  .plate { background: var(--paper); border: var(--line) solid var(--cocoa); border-radius: var(--r-lg); box-shadow: 0 6px 0 var(--cocoa); }
+
+  /* ── 이야기 ── */
+  .story .plate { padding: 38px clamp(22px, 5vw, 56px); text-align: center; max-width: 780px; margin-inline: auto; }
+  .story h2 { margin: 0 0 14px; font: 400 clamp(26px, 3.8vw, 36px)/1.3 var(--f-head); }
+  .story p { margin: 0; font-size: 17px; }
+  .story em { font-style: normal; background: linear-gradient(transparent 60%, #ffe08a 60%); }
+
+  /* ── 해 보기 ── */
+  .try .wrap { display: grid; grid-template-columns: .9fr 1.1fr; gap: 40px; align-items: center; }
+  .rules { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .rules li { display: flex; gap: 14px; align-items: flex-start; padding: 14px 18px; }
+  .rules b { font: 400 18px var(--f-head); display: block; }
+  .rules .n {
+    flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+    background: var(--gold); border: var(--line) solid var(--cocoa); font: 800 18px/1 var(--f-latin);
+  }
+  .rules p { margin: 0; font-size: 14.5px; color: var(--cocoa-soft); }
+  .tray {
+    padding: 14px; border-radius: 30px; position: relative;
+    background: linear-gradient(#e7b27a, #cf8f55); border: 3px solid var(--cocoa); box-shadow: 0 8px 0 var(--cocoa);
+  }
+  .board {
+    position: relative; display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px;
+    padding: 10px; border-radius: 22px; background: #fbe6c6; border: var(--line) solid var(--cocoa);
+    touch-action: none;
+  }
+  .board .tile { cursor: pointer; font-size: clamp(22px, 5.4vw, 36px); transition: transform .12s; }
+  .board .tile.on { transform: scale(.88); filter: brightness(1.12); }
+  .board .tile.pop { animation: pop .32s ease-in forwards; }
+  .board .tile.drop { animation: drop .34s cubic-bezier(.3,1.6,.6,1); }
+  @keyframes pop { 40% { transform: scale(1.22); } 100% { transform: scale(0); opacity: 0; } }
+  @keyframes drop { from { transform: translateY(-40%) scale(.6); opacity: 0; } }
+  .board svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .board polyline { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .hud { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 10px; }
+  .hud .chip {
+    background: var(--paper); border: var(--line) solid var(--cocoa); border-radius: 999px;
+    padding: 4px 16px; font: 800 17px var(--f-latin); white-space: nowrap;
+  }
+  .hud .chip small { font: 700 12px var(--f-body); margin-right: 6px; color: var(--cocoa-soft); }
+  .say {
+    position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%) scale(.6); opacity: 0;
+    font: 800 clamp(30px, 6vw, 48px)/1 var(--f-latin); color: var(--gold);
+    -webkit-text-stroke: 4px var(--cocoa); paint-order: stroke fill; text-shadow: 0 4px 0 var(--cocoa);
+    pointer-events: none; white-space: nowrap; transition: transform .25s cubic-bezier(.3,1.8,.6,1), opacity .2s;
+  }
+  .say.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .say.ko { font-family: var(--f-head); }
+  @media (max-width: 860px) { .try .wrap { grid-template-columns: 1fr; } .tray { max-width: 460px; margin-inline: auto; width: 100%; } }
+
+  /* ── 특징 ── */
+  .feats { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+  .feat { padding: 24px 22px 22px; }
+  .feat .ic { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; border: var(--line) solid var(--cocoa); margin-bottom: 14px; box-shadow: 0 3px 0 var(--cocoa); }
+  .feat .ic svg { width: 28px; height: 28px; }
+  .feat h3 { margin: 0 0 6px; font: 400 21px var(--f-head); }
+  .feat p { margin: 0; font-size: 14.5px; color: var(--cocoa-soft); }
+
+  /* ── 스크린샷 ── */
+  .shots {
+    display: flex; gap: 18px; overflow-x: auto; scroll-snap-type: x mandatory;
+    padding: 6px 16px 22px; margin-inline: -16px; scrollbar-width: thin;
+  }
+  .shots img {
+    flex: none; width: clamp(200px, 26vw, 260px); aspect-ratio: 9 / 16; object-fit: cover;
+    border-radius: 24px; border: 3px solid var(--cocoa); box-shadow: 0 6px 0 var(--cocoa);
+    scroll-snap-align: center; background: var(--cream-2);
+  }
+  .scroll-hint { text-align: center; font-size: 13px; color: var(--cocoa-soft); margin-top: 4px; }
+
+  /* ── 영웅 ── */
+  .heroes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+  .hcard { overflow: hidden; border-radius: 22px; border: var(--line) solid var(--cocoa); background: var(--paper); box-shadow: 0 5px 0 var(--cocoa); transition: transform .15s; }
+  .hcard:hover { transform: translateY(-4px) rotate(-1deg); }
+  .hcard img { width: 100%; aspect-ratio: 640 / 725; object-fit: cover; }
+  .hcard div { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 6px 4px 8px; border-top: var(--line) solid var(--cocoa); font: 400 18px var(--f-head); }
+  .hcard i { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--cocoa); background: var(--c); }
+  .rar { font: 800 11px/1 var(--f-latin); padding: 3px 6px 2px; border-radius: 6px; background: var(--gold); border: 1.5px solid var(--cocoa); }
+  .rar.plus { background: linear-gradient(90deg, #ffb3c7, #ffe38a, #a8e6ff, #d1b3ff); }
+  @media (max-width: 760px) { .heroes { grid-template-columns: repeat(3, 1fr); } .heroes .hcard:nth-child(n+10) { display: none; } }
+  @media (max-width: 420px) { .hcard div { font-size: 15px; } }
+
+  /* ── 마지막 ── */
+  .final .plate { padding: 44px 24px; text-align: center; background: linear-gradient(#fff6e3, #ffe6b8); }
+  .final img.icon { width: 112px; height: 112px; border-radius: 28px; border: 3px solid var(--cocoa); box-shadow: 0 6px 0 var(--cocoa); margin: 0 auto 18px; }
+  .final h2 { margin: 0 0 6px; font: 400 clamp(28px, 4vw, 40px)/1.25 var(--f-head); }
+  .final p { margin: 0 0 24px; color: var(--cocoa-soft); }
+  .notice { list-style: none; padding: 0; margin: 26px auto 0; max-width: 560px; font-size: 13px; color: var(--cocoa-soft); text-align: left; display: grid; gap: 2px; }
+  .notice li::before { content: '※ '; }
+  .notice b { color: var(--cocoa); }
+
+  footer { padding: 30px 0 46px; font-size: 13.5px; color: var(--cocoa-soft); text-align: center; }
+  footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin-bottom: 10px; }
+  footer a { text-decoration: none; font-weight: 700; color: var(--cocoa); }
+  footer a:hover { text-decoration: underline; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="play" viewBox="0 0 24 24"><path d="M5 3.6v16.8c0 .9 1 1.4 1.7.9l13.5-8.4c.7-.4.7-1.4 0-1.8L6.7 2.7C6 2.2 5 2.7 5 3.6Z" fill="#5b3a29"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="img/icon.webp" alt="" width="38" height="38">카운트 캣</a>
+    <nav class="nav">
+      <a href="#try">해 보기</a>
+      <a href="#features">게임 소개</a>
+      <a href="#shots">스크린샷</a>
+      <a href="#heroes">영웅</a>
+    </nav>
+    <a class="btn-play js-play" href="#"><svg><use href="#play"/></svg><span><small>GET IT ON</small>Google Play</span></a>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="wrap">
+      <div>
+        <h1 class="logo">COUNT<br>CAT</h1>
+        <div class="pill">십이지 대전</div>
+        <p class="lead">숫자를 낮은 곳에서 높은 곳으로<br>이어 올려 터뜨리는 퍼즐 RPG!</p>
+        <div class="cta-row">
+          <a class="btn-play js-play" href="#"><svg><use href="#play"/></svg><span><small>지금 받기</small>Google Play</span></a>
+          <span class="cta-note">무료 · Android</span>
+        </div>
+      </div>
+      <div class="stage" aria-hidden="true">
+        <div class="card"><img src="img/nabi.webp" alt="" width="720" height="816"></div>
+        <div class="tile t-water"><span>1</span></div>
+        <div class="tile t-wood"><span>3</span></div>
+        <div class="tile t-light"><span>5</span></div>
+        <div class="tile t-dark"><span>7</span></div>
+        <div class="tile t-fire"><span>9</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="story">
+    <div class="wrap">
+      <div class="plate">
+        <h2>고양이는 왜 십이지에 들지 못했을까?</h2>
+        <p>쥐에게 속아 경주에 늦은 그날부터, <em>고양이 편의 반격</em>이 시작된다!<br>
+        돼지 왕국부터 쥐 왕국까지 — 열두 왕국을 넘어 신이 내려오는 그 순간까지.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="try" id="try">
+    <div class="wrap">
+      <div>
+        <div class="sec-head" style="text-align:left;margin-bottom:22px">
+          <span class="kicker">HOW TO PLAY</span>
+          <h2>규칙은 한 줄,<br>깊이는 끝이 없다</h2>
+        </div>
+        <ul class="rules">
+          <li class="plate"><span class="n">1</span><div><b>같거나 큰 숫자로 잇는다</b><p>8방향으로, 1 → 3 → 3 → 7처럼 오르기만 하면 된다. 세 칸부터 터진다.</p></div></li>
+          <li class="plate"><span class="n">2</span><div><b>길게 이을수록 강하다</b><p>여섯 칸이면 줄 폭탄, 여덟 칸이면 광역 폭탄. 폭발이 폭발을 부른다.</p></div></li>
+          <li class="plate"><span class="n">3</span><div><b>속성 편성으로 폭발시킨다</b><p>이은 타일의 속성이 같은 영웅이 공격한다. 다섯 영웅 + 친구 하나.</p></div></li>
+        </ul>
+      </div>
+      <div class="tray">
+        <div class="board" id="board" aria-label="숫자를 이어 보는 미니 판"></div>
+        <div class="say" id="say"></div>
+        <div class="hud">
+          <span class="chip"><small>이번 체인</small><b id="cur">0</b></span>
+          <span class="chip"><small>최고</small><b id="best">0</b></span>
+          <span class="chip"><small>터뜨린 칸</small><b id="total">0</b></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">FEATURES</span>
+        <h2>판마다 다른 한 판</h2>
+        <p>자동 전투가 없다. 이은 만큼, 생각한 만큼 강해진다.</p>
+      </div>
+      <div class="feats">
+        <article class="feat plate">
+          <div class="ic" style="background:var(--fire)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 9 12l4 3 7-9"/><path d="M15 6h5v5"/></svg></div>
+          <h3>숫자를 이어 올려라</h3>
+          <p>한 턴에 체인 두 번, 체인마다 5초. 짧고 굵게 판을 읽고 가장 긴 길을 찾는다.</p>
+        </article>
+        <article class="feat plate">
+          <div class="ic" style="background:var(--water)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M3 19c0-3 2.2-5 5-5s5 2 5 5M11 19c0-3 2.2-5 5-5s5 2 5 5"/></svg></div>
+          <h3>속성 편성</h3>
+          <p>불·물·나무·빛·어둠과 회복. 편성은 다섯 벌 — 던전에 맞춰 탭 하나로 갈아탄다.</p>
+        </article>
+        <article class="feat plate">
+          <div class="ic" style="background:var(--light)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="5" height="14" rx="1.5"/><rect x="9.5" y="5" width="5" height="14" rx="1.5"/><rect x="16" y="5" width="5" height="14" rx="1.5"/></svg></div>
+          <h3>세 장 중 하나, 축복</h3>
+          <p>방을 넘을 때마다 축복 셋 중 하나를 골라 그 던전만의 빌드를 짠다.</p>
+        </article>
+        <article class="feat plate">
+          <div class="ic" style="background:var(--wood)"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V9l4 3 4-6 4 6 4-3v11Z"/></svg></div>
+          <h3>열두 왕국 280 스테이지</h3>
+          <p>캠페인 이야기에 끝없이 오르는 무한의 탑, 진화·골드·경험치를 모으는 특수 던전까지.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="shots">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">SCREENSHOTS</span>
+        <h2>게임 화면</h2>
+      </div>
+      <div class="shots">
+        <img src="img/01_battle.webp" alt="전투 화면" loading="lazy" width="540" height="960">
+        <img src="img/02_combo.webp" alt="폭발이 폭발을 부르는 콤보" loading="lazy" width="540" height="960">
+        <img src="img/03_summon.webp" alt="소환" loading="lazy" width="540" height="960">
+        <img src="img/04_team.webp" alt="편성" loading="lazy" width="540" height="960">
+        <img src="img/05_boon.webp" alt="축복 3지 선다" loading="lazy" width="540" height="960">
+        <img src="img/06_campaign.webp" alt="캠페인" loading="lazy" width="540" height="960">
+        <img src="img/07_tower.webp" alt="무한의 탑" loading="lazy" width="540" height="960">
+        <img src="img/08_home.webp" alt="홈" loading="lazy" width="540" height="960">
+      </div>
+      <p class="scroll-hint">← 옆으로 넘겨 보세요 →</p>
+    </div>
+  </section>
+
+  <section id="heroes">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">HEROES</span>
+        <h2>귀여운 동물 영웅들</h2>
+        <p>고양이 씨족, 십이지의 신과 왕, 동맹 동물, 던전의 야생 몬스터까지. 모으고 키워서 편성한다.</p>
+      </div>
+      <div class="heroes">
+        <div class="hcard"><img src="img/h_fire_6_a.webp" alt="나비" loading="lazy"><div><i style="--c:var(--fire)"></i>나비</div></div>
+        <div class="hcard"><img src="img/h_water_6_a.webp" alt="소라" loading="lazy"><div><i style="--c:var(--water)"></i>소라</div></div>
+        <div class="hcard"><img src="img/h_wood_6_a.webp" alt="레아" loading="lazy"><div><i style="--c:var(--wood)"></i>레아</div></div>
+        <div class="hcard"><img src="img/h_light_6_a.webp" alt="아리아" loading="lazy"><div><i style="--c:var(--light)"></i>아리아</div></div>
+        <div class="hcard"><img src="img/h_dark_6_a.webp" alt="네로" loading="lazy"><div><i style="--c:var(--dark)"></i>네로</div></div>
+        <div class="hcard"><img src="img/h_fire_7_a.webp" alt="아카네" loading="lazy"><div><i style="--c:var(--fire)"></i>아카네</div></div>
+        <div class="hcard"><img src="img/h_water_7_a.webp" alt="나미" loading="lazy"><div><i style="--c:var(--water)"></i>나미</div></div>
+        <div class="hcard"><img src="img/h_wood_7_a.webp" alt="모리" loading="lazy"><div><i style="--c:var(--wood)"></i>모리</div></div>
+        <div class="hcard"><img src="img/h_light_7_a.webp" alt="세레나" loading="lazy"><div><i style="--c:var(--light)"></i>세레나</div></div>
+        <div class="hcard"><img src="img/h_dark_7_a.webp" alt="루나" loading="lazy"><div><i style="--c:var(--dark)"></i>루나</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <div class="plate">
+        <img class="icon" src="img/icon.webp" alt="카운트 캣 아이콘" width="112" height="112">
+        <h2>고양이 편에 합류하자!</h2>
+        <p>카운트 캣 — 십이지 대전</p>
+        <a class="btn-play js-play" href="#"><svg><use href="#play"/></svg><span><small>지금 받기</small>Google Play</span></a>
+        <ul class="notice">
+          <li>무료로 플레이할 수 있으며, 게임 안에서 유료 아이템(크리스탈 등)을 구매할 수 있습니다.</li>
+          <li><b>확률형 아이템 포함</b> — 등급별 확률은 게임 안 소환 화면과 <a href="count-cat/odds.html">확률 공시</a>에서 확인할 수 있습니다.</li>
+          <li>인터넷 연결이 필요합니다.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <nav>
+      <a href="count-cat/privacy.html">개인정보처리방침</a>
+      <a href="count-cat/delete-account.html">계정 삭제</a>
+      <a href="count-cat/odds.html">확률 공시</a>
+      <a href="mailto:momsmom14@gmail.com">문의 momsmom14@gmail.com</a>
+    </nav>
+    © 2026 Count Cat
+  </div>
+</footer>
+
+<script>
+  // Play 주소 — 한 곳에서만 바꾼다. 프로덕션 공개 전에는 스토어 페이지가 404라 버튼을 "출시 예정"으로 둔다.
+  // 공개되면 PLAY_LIVE = true 한 줄만 바꿔 올린다
+  const PLAY_LIVE = false;
+  const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.momsmom.ascenda';
+  for (const a of document.querySelectorAll('.js-play')) {
+    if (PLAY_LIVE) { a.href = PLAY_URL; a.target = '_blank'; a.rel = 'noopener'; continue; }
+    a.removeAttribute('href'); a.setAttribute('aria-disabled', 'true'); a.classList.add('soon');
+    const small = a.querySelector('small'); if (small) small.textContent = '곧 출시';
+  }
+  if (!PLAY_LIVE) for (const n of document.querySelectorAll('.cta-note')) n.textContent = '무료 · Android · 출시 예정';
+
+  // ── 미니 판 — 게임의 체인 규칙 그대로: 8방향 · 같거나 큰 숫자 · 한 칸 한 번 · 세 칸부터 ──
+  const COLS = 6, ROWS = 5;
+  const ELEMENTS = ['fire', 'water', 'wood', 'light', 'dark', 'heal'];
+  const ELEMENT_COLOR = { fire: '#ef5a3c', water: '#3d8ff0', wood: '#4fbd5a', light: '#f5b42a', dark: '#9b64e3', heal: '#f06ca5' };
+  const board = document.getElementById('board');
+  const say = document.getElementById('say');
+  const cur = document.getElementById('cur'), best = document.getElementById('best'), total = document.getElementById('total');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  const under = document.createElementNS(svg.namespaceURI, 'polyline');
+  const over = document.createElementNS(svg.namespaceURI, 'polyline');
+  under.setAttribute('stroke', '#5b3a29'); under.setAttribute('stroke-width', '15');
+  over.setAttribute('stroke', '#fff7d6'); over.setAttribute('stroke-width', '8');
+  svg.append(under, over);
+
+  const pick = (a) => a[Math.floor(Math.random() * a.length)];
+  const cells = [];
+  function paint(el, cell) {
+    el.className = 'tile t-' + cell.e;
+    el.innerHTML = '<span>' + cell.v + '</span>';
+  }
+  function fresh() { return { v: 1 + Math.floor(Math.random() * 9), e: pick(ELEMENTS) }; }
+  for (let i = 0; i < COLS * ROWS; i++) {
+    const el = document.createElement('div');
+    const cell = { ...fresh(), el, i };
+    paint(el, cell);
+    el.dataset.i = i;
+    cells.push(cell);
+    board.append(el);
+  }
+  board.append(svg);
+
+  let chain = [], dragging = false, bestN = 0, totalN = 0, sayTimer = 0;
+  const adj = (a, b) => a !== b && Math.abs(a % COLS - b % COLS) <= 1 && Math.abs(Math.floor(a / COLS) - Math.floor(b / COLS)) <= 1;
+  function center(i) {
+    const r = cells[i].el.getBoundingClientRect(), b = board.getBoundingClientRect();
+    return (r.left + r.width / 2 - b.left) + ',' + (r.top + r.height / 2 - b.top);
+  }
+  function draw() {
+    const pts = chain.map(center).join(' ');
+    under.setAttribute('points', pts); over.setAttribute('points', pts);
+    over.setAttribute('stroke', chain.length ? ELEMENT_COLOR[cells[chain[0]].e] : '#fff');
+    for (const c of cells) c.el.classList.toggle('on', chain.includes(c.i));
+    cur.textContent = chain.length;
+  }
+  function tileAt(x, y) {
+    const el = document.elementFromPoint(x, y)?.closest('.tile');
+    return el && board.contains(el) ? +el.dataset.i : -1;
+  }
+  function visit(i) {
+    if (i < 0) return;
+    const last = chain[chain.length - 1];
+    if (i === last) return;
+    if (chain.length > 1 && i === chain[chain.length - 2]) { chain.pop(); draw(); return; } // 되돌리기
+    if (chain.includes(i) || !adj(last, i) || cells[i].v < cells[last].v) return;
+    chain.push(i); draw();
+  }
+  function shout(text, ko) {
+    say.textContent = text; say.classList.toggle('ko', !!ko); say.classList.add('show');
+    clearTimeout(sayTimer); sayTimer = setTimeout(() => say.classList.remove('show'), 900);
+  }
+  function release() {
+    if (!dragging) return;
+    dragging = false;
+    const done = chain; chain = [];
+    if (done.length >= 3) {
+      totalN += done.length; total.textContent = totalN;
+      if (done.length > bestN) { bestN = done.length; best.textContent = bestN; }
+      shout(done.length >= 8 ? 'GREAT ' + done.length + ' CHAIN!' : done.length >= 6 ? 'NICE ' + done.length + ' CHAIN!' : done.length + ' CHAIN');
+      for (const i of done) cells[i].el.classList.add('pop');
+      setTimeout(() => {
+        for (const i of done) { Object.assign(cells[i], fresh()); paint(cells[i].el, cells[i]); cells[i].el.classList.add('drop'); }
+        setTimeout(() => { for (const i of done) cells[i].el.classList.remove('drop'); }, 360);
+      }, 320);
+    } else if (done.length) {
+      shout('세 칸부터 터져요', true);
+    }
+    draw(); cur.textContent = done.length;
+  }
+  board.addEventListener('pointerdown', (ev) => {
+    const i = tileAt(ev.clientX, ev.clientY);
+    if (i < 0) return;
+    ev.preventDefault();
+    dragging = true; chain = [i]; draw();
+  });
+  window.addEventListener('pointermove', (ev) => { if (dragging) visit(tileAt(ev.clientX, ev.clientY)); });
+  window.addEventListener('pointerup', release);
+  window.addEventListener('pointercancel', release);
+  window.addEventListener('resize', draw);
+</script>
+</body>
+</html>
