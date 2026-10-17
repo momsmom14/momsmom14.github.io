@@ -3,17 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>카운트 캣 — 십이지 대전</title>
-<meta name="description" content="숫자를 낮은 곳에서 높은 곳으로 이어 터뜨리는 숫자 퍼즐 RPG. 고양이 편이 되어 십이지 왕국에 맞서자!">
+<title>카운트 캣(Count Cat) — 숫자를 이어 터뜨리는 퍼즐 RPG · 십이지 대전</title>
+<meta name="description" content="숫자를 낮은 곳에서 높은 곳으로 이어 터뜨리는 모바일 숫자 퍼즐 RPG 카운트 캣. 귀여운 고양이 편이 되어 십이지 왕국에 맞서자! Android 출시 예정.">
+<!-- SEO — 대표 주소 · 색인 허용. 검색 엔진 소유 확인 태그(google-site-verification · naver-site-verification)는 계정에서 받은 값을 여기에 넣는다 -->
+<link rel="canonical" href="https://momsmom14.github.io/">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="theme-color" content="#fff3dc">
 <meta name="color-scheme" content="light">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Count Cat">
-<meta property="og:title" content="카운트 캣 — 십이지 대전">
+<meta property="og:title" content="카운트 캣(Count Cat) — 숫자를 이어 터뜨리는 퍼즐 RPG">
+<meta property="og:locale" content="ko_KR">
 <meta property="og:description" content="숫자를 이어 올려 터뜨리는 퍼즐 RPG. 고양이 편이 되어 십이지 왕국에 맞서자!">
 <meta property="og:image" content="https://momsmom14.github.io/img/og.png">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="500">
+<meta property="og:image:alt" content="카운트 캣 — 숫자 1에서 9까지 이어 올리는 고양이 퍼즐 RPG">
 <meta property="og:url" content="https://momsmom14.github.io/">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="카운트 캣(Count Cat) — 숫자를 이어 터뜨리는 퍼즐 RPG">
+<meta name="twitter:description" content="숫자를 이어 올려 터뜨리는 퍼즐 RPG. 고양이 편이 되어 십이지 왕국에 맞서자!">
+<meta name="twitter:image" content="https://momsmom14.github.io/img/og.png">
+<!-- 구조화 데이터 — 검색 결과가 이 페이지를 「게임」으로 읽게(출시 전이라 가격 · 평점은 넣지 않는다) -->
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://momsmom14.github.io/#org", "name": "Count Cat", "url": "https://momsmom14.github.io/", "logo": "https://momsmom14.github.io/img/icon.webp", "email": "momsmom14@gmail.com", "sameAs": ["https://www.youtube.com/channel/UC3_5f1y6QWhC20kdtrIttiQ", "https://www.instagram.com/momsmom14/"]}, {"@type": "WebSite", "@id": "https://momsmom14.github.io/#site", "url": "https://momsmom14.github.io/", "name": "카운트 캣", "alternateName": "Count Cat", "inLanguage": "ko", "publisher": {"@id": "https://momsmom14.github.io/#org"}}, {"@type": "VideoGame", "@id": "https://momsmom14.github.io/#game", "name": "카운트 캣", "alternateName": ["Count Cat", "카운트캣", "카운트 캣: 십이지 대전"], "url": "https://momsmom14.github.io/", "image": "https://momsmom14.github.io/img/og.png", "description": "숫자를 낮은 곳에서 높은 곳으로 이어 터뜨리는 모바일 숫자 퍼즐 RPG. 고양이 편이 되어 십이지 왕국에 맞선다.", "genre": ["퍼즐", "RPG", "숫자 퍼즐"], "gamePlatform": "Android", "operatingSystem": "Android", "applicationCategory": "GameApplication", "inLanguage": "ko", "playMode": "SinglePlayer", "author": {"@id": "https://momsmom14.github.io/#org"}, "publisher": {"@id": "https://momsmom14.github.io/#org"}, "sameAs": ["https://www.youtube.com/channel/UC3_5f1y6QWhC20kdtrIttiQ", "https://www.instagram.com/momsmom14/"]}]}</script>
 <link rel="icon" href="img/icon-64.png" type="image/png">
 <link rel="apple-touch-icon" href="img/icon.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -90,6 +102,7 @@
   /* ── 첫 화면 ── */
   .hero { padding: 56px 0 72px; }
   .hero .wrap { display: grid; grid-template-columns: 1.05fr .95fr; gap: 40px; align-items: center; }
+  .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   .logo {
     margin: 0; font: 800 clamp(64px, 11vw, 124px)/.86 var(--f-latin); letter-spacing: .01em;
     color: var(--gold);
@@ -281,7 +294,7 @@
   <div class="hero">
     <div class="wrap">
       <div>
-        <h1 class="logo">COUNT<br>CAT</h1>
+        <h1 class="logo"><span class="sr">카운트 캣 </span>COUNT <br>CAT</h1>
         <div class="pill">십이지 대전</div>
         <p class="lead">숫자를 낮은 곳에서 높은 곳으로<br>이어 올려 터뜨리는 퍼즐 RPG!</p>
         <div class="cta-row">
@@ -290,7 +303,7 @@
         </div>
       </div>
       <div class="stage" aria-hidden="true">
-        <div class="card"><img src="img/nabi.webp" alt="" width="720" height="816"></div>
+        <div class="card"><img src="img/nabi.webp" alt="카운트 캣의 주인공 고양이 나비" width="720" height="816"></div>
         <div class="tile t-water"><span>1</span></div>
         <div class="tile t-wood"><span>3</span></div>
         <div class="tile t-light"><span>5</span></div>
@@ -395,16 +408,16 @@
         <p>고양이 씨족, 십이지의 신과 왕, 동맹 동물, 던전의 야생 몬스터까지. 모으고 키워서 편성한다.</p>
       </div>
       <div class="heroes">
-        <div class="hcard"><img src="img/h_fire_6_a.webp" alt="나비" loading="lazy"><div><i style="--c:var(--fire)"></i>나비</div></div>
-        <div class="hcard"><img src="img/h_water_6_a.webp" alt="소라" loading="lazy"><div><i style="--c:var(--water)"></i>소라</div></div>
-        <div class="hcard"><img src="img/h_wood_6_a.webp" alt="레아" loading="lazy"><div><i style="--c:var(--wood)"></i>레아</div></div>
-        <div class="hcard"><img src="img/h_light_6_a.webp" alt="아리아" loading="lazy"><div><i style="--c:var(--light)"></i>아리아</div></div>
-        <div class="hcard"><img src="img/h_dark_6_a.webp" alt="네로" loading="lazy"><div><i style="--c:var(--dark)"></i>네로</div></div>
-        <div class="hcard"><img src="img/h_fire_7_a.webp" alt="아카네" loading="lazy"><div><i style="--c:var(--fire)"></i>아카네</div></div>
-        <div class="hcard"><img src="img/h_water_7_a.webp" alt="나미" loading="lazy"><div><i style="--c:var(--water)"></i>나미</div></div>
-        <div class="hcard"><img src="img/h_wood_7_a.webp" alt="모리" loading="lazy"><div><i style="--c:var(--wood)"></i>모리</div></div>
-        <div class="hcard"><img src="img/h_light_7_a.webp" alt="세레나" loading="lazy"><div><i style="--c:var(--light)"></i>세레나</div></div>
-        <div class="hcard"><img src="img/h_dark_7_a.webp" alt="루나" loading="lazy"><div><i style="--c:var(--dark)"></i>루나</div></div>
+        <div class="hcard"><img src="img/h_fire_6_a.webp" alt="나비" loading="lazy" width="320" height="362"><div><i style="--c:var(--fire)"></i>나비</div></div>
+        <div class="hcard"><img src="img/h_water_6_a.webp" alt="소라" loading="lazy" width="320" height="362"><div><i style="--c:var(--water)"></i>소라</div></div>
+        <div class="hcard"><img src="img/h_wood_6_a.webp" alt="레아" loading="lazy" width="320" height="362"><div><i style="--c:var(--wood)"></i>레아</div></div>
+        <div class="hcard"><img src="img/h_light_6_a.webp" alt="아리아" loading="lazy" width="320" height="362"><div><i style="--c:var(--light)"></i>아리아</div></div>
+        <div class="hcard"><img src="img/h_dark_6_a.webp" alt="네로" loading="lazy" width="320" height="362"><div><i style="--c:var(--dark)"></i>네로</div></div>
+        <div class="hcard"><img src="img/h_fire_7_a.webp" alt="아카네" loading="lazy" width="320" height="362"><div><i style="--c:var(--fire)"></i>아카네</div></div>
+        <div class="hcard"><img src="img/h_water_7_a.webp" alt="나미" loading="lazy" width="320" height="362"><div><i style="--c:var(--water)"></i>나미</div></div>
+        <div class="hcard"><img src="img/h_wood_7_a.webp" alt="모리" loading="lazy" width="320" height="362"><div><i style="--c:var(--wood)"></i>모리</div></div>
+        <div class="hcard"><img src="img/h_light_7_a.webp" alt="세레나" loading="lazy" width="320" height="362"><div><i style="--c:var(--light)"></i>세레나</div></div>
+        <div class="hcard"><img src="img/h_dark_7_a.webp" alt="루나" loading="lazy" width="320" height="362"><div><i style="--c:var(--dark)"></i>루나</div></div>
       </div>
     </div>
   </section>

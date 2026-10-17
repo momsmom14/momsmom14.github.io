@@ -1,0 +1,5 @@
+# 카운트 캣 홍보 사이트 — 모든 검색 엔진에 색인을 허용한다(구글 Googlebot · 네이버 Yeti · 다음 Daum 포함)
+User-agent: *
+Allow: /
+
+Sitemap: https://momsmom14.github.io/sitemap.xml
