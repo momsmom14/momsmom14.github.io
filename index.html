@@ -245,6 +245,12 @@
   footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin-bottom: 10px; }
   footer a { text-decoration: none; font-weight: 700; color: var(--cocoa); }
   footer a:hover { text-decoration: underline; }
+  /* 채널 — 쇼츠 · 릴스(promo/shorts/SHORTS.md) */
+  .social { display: flex; justify-content: center; gap: 12px; margin-bottom: 16px; }
+  .social a { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px 9px; border-radius: 999px; background: var(--paper);
+    border: var(--line) solid var(--cocoa); box-shadow: 0 3px 0 var(--cocoa); font: 400 15px var(--f-head); color: var(--cocoa); }
+  .social a:hover { text-decoration: none; transform: translateY(1px); box-shadow: 0 2px 0 var(--cocoa); }
+  .social svg { width: 20px; height: 20px; flex: none; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -422,6 +428,16 @@
 
 <footer>
   <div class="wrap">
+    <div class="social">
+      <a href="https://www.youtube.com/channel/UC3_5f1y6QWhC20kdtrIttiQ" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="4.5" fill="#ef3b2d" stroke="#5b3a29" stroke-width="1.6"/><path d="M10 8.8v6.4l5.4-3.2z" fill="#fff"/></svg>
+        YouTube 쇼츠
+      </a>
+      <a href="https://www.instagram.com/momsmom14/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="6" fill="#e1306c" stroke="#5b3a29" stroke-width="1.6"/><circle cx="12" cy="12" r="4.4" fill="none" stroke="#fff" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="#fff"/></svg>
+        Instagram
+      </a>
+    </div>
     <nav>
       <a href="count-cat/privacy.html">개인정보처리방침</a>
       <a href="count-cat/delete-account.html">계정 삭제</a>
